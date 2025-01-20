@@ -46,7 +46,6 @@ export default class HandlersMedia {
         };
 
         if (data_document.length === 1) {
-          console.info(`Data Document sisa adalah ${data_document.length}`);
           await Client.sendDocument(chat_id, data_document[0], {
             reply_to_message_id: message_id,
           });
@@ -61,17 +60,12 @@ export default class HandlersMedia {
             if (event.data === "lanjutkan_document") {
               try {
                 await Client.deleteMessage(chat_id, sentMessage.message_id);
-                console.log(`Berhasil menghapus dari Pesan Document`);
-                console.info(
-                  `Callback dari Button Document di click sisa document adalah ${data_document.length}`
-                );
                 await this.sendMediaDocument(
                   chat_id,
                   data_document,
                   data_media,
                   message_id
                 );
-                console.info(`Mengirimkan Document selanjutnya....`);
               } catch (err) {
                 console.error(err);
               }
@@ -99,7 +93,6 @@ export default class HandlersMedia {
     message_id: number
   ): Promise<void> {
     if (data_media.length === 0) {
-      console.info(`Data Media Document Dijalankan`);
       await this.sendMediaDocument(
         chat_id,
         data_document,
@@ -110,9 +103,6 @@ export default class HandlersMedia {
     }
 
     if (data_media.length >= 4) {
-      console.info(
-        `Kondisi media lebih dari 4 Dijalankan sisa Media adalah ${data_media.length}`
-      );
       const data_split = data_media.splice(0, 4);
       await Client.sendMediaGroup(chat_id, data_split, {
         reply_to_message_id: message_id,
@@ -141,10 +131,6 @@ export default class HandlersMedia {
       Client.on("callback_query", async (event) => {
         if (event.data === "lanjutkan_media") {
           await Client.deleteMessage(chat_id, sentMessage.message_id);
-          console.log(`Berhasil menghapus pesan dari Callback Media`);
-          console.info(
-            `Callback Button dari Media dijalankan sisa media adalah ${data_media.length}`
-          );
           await this.send_msg_Media(
             chat_id,
             data_media,
@@ -157,9 +143,6 @@ export default class HandlersMedia {
       await Client.sendMediaGroup(chat_id, data_media, {
         reply_to_message_id: message_id,
       });
-      console.info(
-        `Pengiriman media kurang dari dari 4 sisa media adalah ${data_media.length}`
-      );
       data_media = []; // Clear the array
       await this.sendMediaDocument(
         chat_id,
